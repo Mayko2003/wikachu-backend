@@ -14,7 +14,7 @@ app.use(cors());
 app.use(express.json());
 
 //routes
-
+app.use('/api',require('./routes'));
 
 //configs
 app.set('port', process.env.PORT || 3000);
