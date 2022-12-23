@@ -1,12 +1,14 @@
-const User = require("../models/user");
+const { User } = require("../models");
 const jwt = require("jsonwebtoken");
 
 const userController = {};
 
-userController.getUsers = async(req, res) => {
+userController.getUsers = async (req, res) => {
     try {
         const users = await User.find();
-        res.status(200).json(users);
+        res.status(200).json({
+            data: users,
+        });
     } catch (error) {
         res.status(500).json({
             message: error,
@@ -14,7 +16,7 @@ userController.getUsers = async(req, res) => {
     }
 };
 
-userController.createUser = async(req, res) => {
+userController.createUser = async (req, res) => {
     try {
         const user = new User(req.body);
         await user.save();
@@ -26,7 +28,7 @@ userController.createUser = async(req, res) => {
     }
 };
 
-userController.deleteUser = async(req, res) => {
+userController.deleteUser = async (req, res) => {
     try {
         await User.findByIdAndDelete(req.params.id);
         res.status(200).json({
@@ -39,7 +41,7 @@ userController.deleteUser = async(req, res) => {
     }
 };
 
-userController.updateUser = async(req, res) => {
+userController.updateUser = async (req, res) => {
     try {
         const id = req.params.id;
         await User.findOneAndUpdate({ _id: id }, req.body);
@@ -53,10 +55,12 @@ userController.updateUser = async(req, res) => {
     }
 };
 
-userController.getUserById = async(req, res) => {
+userController.getUserById = async (req, res) => {
     try {
         const user = await User.findById(req.params.id);
-        res.status(200).json(user);
+        res.status(200).json({
+            data: user,
+        });
     } catch (error) {
         res.status(500).json({
             message: error,
@@ -64,10 +68,10 @@ userController.getUserById = async(req, res) => {
     }
 }
 
-userController.loginUser = async(req, res) => {
+userController.loginUser = async (req, res) => {
     try {
         const username = req.body.username,
-              password = req.body.password;
+            password = req.body.password;
         const user = await User.findOne({
             $and: [{ username: username }, { password: password }, { state: true }]
         });
@@ -77,9 +81,9 @@ userController.loginUser = async(req, res) => {
                 message: "User or password incorrect",
             });
         } else {
-            token = jwt.sign({ id: User._id }, "jwtsecret");
+            token = jwt.sign({ id: User._id }, process.env.JWT_SECRET);
             res.status(200).json({
-                user: user,
+                data: user,
                 token: token
             });
         }
@@ -90,10 +94,12 @@ userController.loginUser = async(req, res) => {
     }
 };
 
-userController.getLoggedUser = async(req, res) => {
+userController.getLoggedUser = async (req, res) => {
     try {
         const user = await User.findById(req.userid);
-        res.status(200).json(user);
+        res.status(200).json({
+            data: user,
+        });
     } catch (error) {
         res.status(500).json({
             message: error,
