@@ -20,8 +20,8 @@ authController.verifyToken = async (req, res, next) => {
         }
         else{
             try{
-                const payload = jwt.verify(token, "jwtsecret")
-                req.userid = payload._id
+                const payload = jwt.verify(token, process.env.JWT_SECRET)
+                req.userid = payload.id
                 next()
             }
             catch(err){
