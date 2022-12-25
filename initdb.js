@@ -16,6 +16,7 @@ const saveData = async (pages) => {
             const newPokemon = new Pokemon({
                 id_pokemon: details.id,
                 name: details.name,
+                generation: details.generation.name,
             });
 
             await newPokemon.save();
