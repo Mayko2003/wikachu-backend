@@ -1,5 +1,6 @@
 const { User } = require("../models");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 const userController = {};
 
@@ -18,6 +19,9 @@ userController.getUsers = async (req, res) => {
 
 userController.createUser = async (req, res) => {
     try {
+        await bcrypt.hash(req.body.password, 10).then((hash) => {
+            req.body.password = hash;
+        });
         const user = new User(req.body);
         await user.save();
         res.status(200).json({
@@ -70,15 +74,19 @@ userController.getUserById = async (req, res) => {
 
 userController.loginUser = async (req, res) => {
     try {
-        const username = req.body.username,
-            password = req.body.password;
-        const user = await User.findOne({
-            $and: [{ username: username }, { password: password }, { state: true }]
-        });
-
+        let user = await User.findOne({ username: req.body.username, state: true });
         if (!user) {
             res.status(400).json({
-                message: "User or password incorrect",
+                message: "User does not exist",
+            });
+        }
+
+        const validPassword = await bcrypt.compare(req.body.password, user.password);
+
+
+        if (!validPassword) {
+            res.status(400).json({
+                message: "Incorrect password",
             });
         } else {
             token = jwt.sign({ id: User._id }, process.env.JWT_SECRET);
@@ -89,7 +97,7 @@ userController.loginUser = async (req, res) => {
         }
     } catch (error) {
         res.status(500).json({
-            msj: "Error to get User",
+            msj: "Error to login user",
         });
     }
 };
