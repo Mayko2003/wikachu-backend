@@ -38,7 +38,7 @@ const initDB = async () => {
         url = response.next;
     }
 
-    await fillPokemons(pages);
+    await saveData(pages);
 }
 
 module.exports = initDB;
