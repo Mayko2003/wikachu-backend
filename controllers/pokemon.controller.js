@@ -6,7 +6,7 @@ const pokemonController = {}
 
 pokemonController.getPokemons = async (req, res) => {
     try {
-        const pokemons = await Pokemon.find()
+        const pokemons = await Pokemon.find().sort({ id_pokemon: 1 })
         res.status(200).json({
             data: pokemons
         })
@@ -32,7 +32,7 @@ pokemonController.getPopularPokemons = async (req, res) => {
 
 pokemonController.getGenerationPokemons = async (req, res) => {
     try {
-        const pokemons = await Pokemon.find({ generation: req.params.generation })
+        const pokemons = await Pokemon.find({ generation: req.params.generation }).sort({ id_pokemon: 1 })
         res.status(200).json({
             data: pokemons
         })
