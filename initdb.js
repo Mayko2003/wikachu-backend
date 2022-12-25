@@ -1,7 +1,6 @@
 const POKE_API_URL = 'https://pokeapi.co/api/v2';
 const { Pokemon } = require('./models');
 
-let pokemons = [];
 
 const fetchData = async (url) => {
     const response = await fetch(url);
@@ -9,42 +8,36 @@ const fetchData = async (url) => {
     return data;
 }
 
-const getPokemons = async (results) => {
-    results.map(async (pokemon) => {
-        const details = await fetchData(pokemon.url);
-        pokemons = [...pokemons, details];
-    })
-}
+const saveData = async (pages) => {
+    pages.map((page) => {
+        page.results.map(async (pokemon) => {
+            const details = await fetchData(pokemon.url);
 
-const insertData = async () => {
-    pokemons.sort((a, b) => a.id - b.id);
+            const newPokemon = new Pokemon({
+                id_pokemon: details.id,
+                name: details.name,
+            });
 
-    pokemons.map(async (pokemon) => {
-        const newPokemon = new Pokemon({
-            id_pokemon: pokemon.id,
-            name: pokemon.name,
-        });
-        await newPokemon.save();
+            await newPokemon.save();
+        })
     })
+
 }
 
 
 const initDB = async () => {
 
-    const url = `${POKE_API_URL}/pokemon-species?limit=200`;
+    let url = `${POKE_API_URL}/pokemon-species?limit=200`;
 
-    let page = await fetchData(url);
+    let pages = [];
 
-    while (1) {
-        
-        await getPokemons(page.results);
-
-        const next = page.next;
-        if (!next)  break;
-        page = await fetchData(next);
+    while (url) {
+        const response = await fetchData(url);
+        pages.push(response);
+        url = response.next;
     }
 
-    await insertData();
+    await fillPokemons(pages);
 }
 
 module.exports = initDB;
