@@ -19,7 +19,7 @@ pokemonController.getPokemons = async (req, res) => {
 
 pokemonController.getPopularPokemons = async (req, res) => {
     try {
-        const pokemons = await Pokemon.find().sort({ likes: -1 }).limit(3)
+        const pokemons = await Pokemon.find().sort({ likes: -1 }).limit(4)
         res.status(200).json({
             data: pokemons
         })
