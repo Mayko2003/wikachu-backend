@@ -21,7 +21,6 @@ authController.verifyToken = async (req, res, next) => {
         else{
             try{
                 const payload = jwt.verify(token, process.env.JWT_SECRET)
-                req.userid = payload.id
                 next()
             }
             catch(err){
