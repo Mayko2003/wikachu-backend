@@ -8,7 +8,7 @@ userController.getUsers = async (req, res) => {
     try {
         const users = await User.find();
         res.status(200).json({
-            data: users,
+            users: users,
         });
     } catch (error) {
         res.status(500).json({
@@ -63,7 +63,7 @@ userController.getUserById = async (req, res) => {
     try {
         const user = await User.findById(req.params.id);
         res.status(200).json({
-            data: user,
+            user: user,
         });
     } catch (error) {
         res.status(500).json({
@@ -89,7 +89,7 @@ userController.loginUser = async (req, res) => {
                 message: "Incorrect password",
             });
         } else {
-            token = jwt.sign({_id : user._id}, process.env.JWT_SECRET);
+            token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
             res.status(200).json({
                 token: token
             });
@@ -105,9 +105,9 @@ userController.getLoggedUser = async (req, res) => {
     try {
         const token = req.headers.authorization.split(' ')[1];
         const payload = jwt.verify(token, process.env.JWT_SECRET);
-        const user = await User.findOne({ _id: payload._id, state: true });
+        const user = await User.findById(payload._id);
         res.status(200).json({
-            data: user,
+            data: { ...user._doc, password: undefined }
         });
     } catch (error) {
         res.status(500).json({
