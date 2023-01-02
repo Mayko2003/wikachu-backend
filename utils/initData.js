@@ -14,7 +14,7 @@ const fetchData = async (url) => {
 
 const generateData = (endpoint) => {
     fetchData(`${POKE_API_URL}/${endpoint}?limit=5000`).then((data) => {
-        fs.writeFileSync(`./data/${endpoint}.json`, JSON.stringify(data));
+        fs.writeFileSync(`../data/${endpoint}.json`, JSON.stringify(data));
     })
 }
 
