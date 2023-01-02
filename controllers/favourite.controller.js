@@ -4,7 +4,7 @@ const favouriteController = {};
 
 favouriteController.getFavouritesByUser = async (req, res) => {
     try {
-        const favourites = await Favourite.find({ user: req.params.id }).populate('pokemon');
+        const favourites = await Favourite.find({ user: req.params.id }).populate('obj');
         res.status(200).json({
             data: favourites
         });
