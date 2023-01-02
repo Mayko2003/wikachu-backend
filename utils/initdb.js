@@ -1,5 +1,5 @@
 const PATH_ROUTES = './data'
-const { Pokemon, Item } = require('./models')
+const { Pokemon, Item } = require('../models')
 const fs = require('fs')
 
 const removeExtension = (fileName) => {
