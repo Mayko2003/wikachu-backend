@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const { Pokemon, Item} = require('./models')
 const url = `mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`;
 
 mongoose.connect(url).then(async () => {
