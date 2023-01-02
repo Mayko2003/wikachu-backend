@@ -1,44 +1,32 @@
-const POKE_API_URL = 'https://pokeapi.co/api/v2';
-const { Pokemon } = require('./models');
+const PATH_ROUTES = './data'
+const { Pokemon, Item } = require('./models')
+const fs = require('fs')
 
-
-const fetchData = async (url) => {
-    const response = await fetch(url);
-    const data = await response.json();
-    return data;
+const removeExtension = (fileName) => {
+    return fileName.split('.').shift();
 }
 
-const saveData = async (pages) => {
-    pages.map((page) => {
-        page.results.map(async (pokemon) => {
-            const details = await fetchData(pokemon.url);
-
-            const newPokemon = new Pokemon({
-                id_pokemon: details.id,
-                name: details.name,
-                generation: details.generation.name,
-            });
-
-            await newPokemon.save();
-        })
+const initDB = () => {
+    fs.readdirSync(PATH_ROUTES).filter((file) => {
+        const name = removeExtension(file);
+        switch (name) {
+            case 'pokemon-species':
+                const pokemonData = require(`./data/${file}`)
+                pokemonData.forEach((pokemon, i) => {
+                    Pokemon.create({ id: i + 1, name: pokemon.name })
+                })
+                break;
+            case 'item':
+                const itemData = require(`./data/${file}`)
+                itemData.forEach((item,i) => {
+                    Item.create({ id: i + 1, name: item.name })
+                })
+                break;
+            default:
+                break;
+        }
     })
-
 }
 
+module.exports = initDB
 
-const initDB = async () => {
-
-    let url = `${POKE_API_URL}/pokemon-species?limit=200`;
-
-    let pages = [];
-
-    while (url) {
-        const response = await fetchData(url);
-        pages.push(response);
-        url = response.next;
-    }
-
-    await saveData(pages);
-}
-
-module.exports = initDB;
