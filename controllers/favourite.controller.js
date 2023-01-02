@@ -34,8 +34,8 @@ favouriteController.createFavourite = async (req, res) => {
 favouriteController.deleteFavourite = async (req, res) => {
     try {
         const user = req.body.user;
-        const pokemon = req.body.pokemon;
-        const favourite = await Favourite.findOneAndDelete({ user, pokemon });
+        const obj = req.body.obj;
+        const favourite = await Favourite.findOneAndDelete({ user, obj });
         res.status(200).json({
             message: 'Favourite deleted'
         });
@@ -50,8 +50,8 @@ favouriteController.deleteFavourite = async (req, res) => {
 favouriteController.checkFavourite = async (req, res) => {
     try {
         const user = req.body.user;
-        const pokemon = req.body.pokemon;
-        const favourite = await Favourite.findOne({ user, pokemon });
+        const obj = req.body.obj;
+        const favourite = await Favourite.findOne({ user, obj });
 
         res.status(200).json({
             data: {
