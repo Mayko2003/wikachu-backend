@@ -76,7 +76,8 @@ userController.loginUser = async (req, res) => {
     try {
         let user = await User.findOne({ username: req.body.username, state: true });
         if (!user) {
-            res.status(400).json({
+            return res.status(400).json({
+                type: 'username',
                 message: "User does not exist",
             });
         }
@@ -86,6 +87,7 @@ userController.loginUser = async (req, res) => {
 
         if (!validPassword) {
             res.status(400).json({
+                type: 'password',
                 message: "Incorrect password",
             });
         } else {
@@ -96,7 +98,8 @@ userController.loginUser = async (req, res) => {
         }
     } catch (error) {
         res.status(500).json({
-            msj: "Error to login user",
+            type: 'server',
+            message: "Error to login user",
         });
     }
 };
