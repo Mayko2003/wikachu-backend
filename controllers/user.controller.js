@@ -19,6 +19,15 @@ userController.getUsers = async (req, res) => {
 
 userController.createUser = async (req, res) => {
     try {
+        let user1 = await User.findOne({ username: req.body.username });
+        
+        if (user1) {
+            return res.status(400).json({
+                type: 'username',
+                message: "User already exists, use other name",
+            });
+        }
+
         await bcrypt.hash(req.body.password, 10).then((hash) => {
             req.body.password = hash;
         });
