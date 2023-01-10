@@ -8,7 +8,7 @@ const FavouriteSchema = new Schema({
     onModel: {
         type: String,
         required: true,
-        enum: ['Pokemon', 'Ability', 'Move', 'Item', 'Type']
+        enum: ['Pokemon', 'Ability', 'Move', 'Item', 'Nature']
     }
 })
 
