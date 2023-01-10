@@ -12,6 +12,6 @@ router.get('/find/:id', authController.verifyToken, userController.getUserById)
 router.post('/login', userController.loginUser)
 
 
-router.get('/logged', authController.verifyToken, userController.getLoggedUser)
+router.get('/logged', userController.getLoggedUser)
 
 module.exports = router
