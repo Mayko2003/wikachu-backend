@@ -20,15 +20,7 @@ userController.getUsers = async (req, res) => {
 
 userController.createUser = async (req, res) => {
     try {
-        let usernameRepeated = await User.findOne({ username: req.body.username });
         let emailRepeated = await User.findOne({ email: req.body.email });
-
-        if (usernameRepeated) {
-            return res.status(400).json({
-                type: 'username',
-                message: "User already exists, use other name",
-            });
-        }
 
         if(emailRepeated){
             return res.status(400).json({
@@ -92,10 +84,10 @@ userController.getUserById = async (req, res) => {
 
 userController.loginUser = async (req, res) => {
     try {
-        let user = await User.findOne({ username: req.body.username, state: true });
+        let user = await User.findOne({ email: req.body.email, state: true });
         if (!user) {
             return res.status(400).json({
-                type: 'username',
+                type: 'email',
                 message: "User does not exist",
             });
         }
