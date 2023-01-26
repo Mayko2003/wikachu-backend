@@ -1,6 +1,7 @@
 const { User } = require("../models");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const admin = require('../firebaseConfig');
 
 const userController = {};
 
@@ -19,12 +20,20 @@ userController.getUsers = async (req, res) => {
 
 userController.createUser = async (req, res) => {
     try {
-        let user1 = await User.findOne({ username: req.body.username });
-        
-        if (user1) {
+        let usernameRepeated = await User.findOne({ username: req.body.username });
+        let emailRepeated = await User.findOne({ email: req.body.email });
+
+        if (usernameRepeated) {
             return res.status(400).json({
                 type: 'username',
                 message: "User already exists, use other name",
+            });
+        }
+
+        if(emailRepeated){
+            return res.status(400).json({
+                type: 'email',
+                message: "Email is already used on other account",
             });
         }
 
@@ -122,6 +131,49 @@ userController.getLoggedUser = async (req, res) => {
             data: { ...user._doc, password: undefined }
         });
     } catch (error) {
+        try{
+            const token = req.headers.authorization.split(' ')[1];
+            const payload = await admin.auth().verifyIdToken(token);
+            let user = await User.findOne({email: payload.email, state: true});
+            if(!user){
+                setTimeout(async () => {
+                    user = await User.findOne({email: payload.email, state: true});
+                    return res.status(200).json({
+                        data: { ...user._doc, password: undefined }
+                    });
+                }, 2000);
+            }else{
+                res.status(200).json({
+                data: { ...user._doc, password: undefined }
+            });
+            }
+        } catch(error){  
+            res.status(500).json({
+                message: error,
+            });
+        }
+    }
+}
+
+userController.userExists = async (req, res) => {
+    try{
+        const token = req.headers.authorization.split(' ')[1];
+        const payload = await admin.auth().verifyIdToken(token);
+        let user = await User.findOne({email: payload.email, state: true});
+        if(user){    
+            res.status(200).json({
+                exists: true,
+                message: 'User already exists, please login in',
+                type: 'google'
+            });
+        }else{
+            res.status(200).json({
+                exists: false,
+                message: 'User doesnt exist, please sign up first',
+                type: 'google'
+            });
+        }
+    } catch(error){  
         res.status(500).json({
             message: error,
         });
