@@ -4,6 +4,8 @@ const POKE_API_URL = 'https://pokeapi.co/api/v2';
 const endpoints = [
     'pokemon-species',
     'item',
+    'nature',
+    'move'
 ]
 
 const fetchData = async (url) => {
