@@ -16,6 +16,8 @@ First you need to install all dependencies
 
 Then you need to initialize your .env file so you can guide with env.example file.
 
+If you don't have firebase credentials, first you need to create a firebase project [Firebase](https://console.firebase.google.com/). Then you can read the following documentation for generate a private key file, [Initialize the SDK in non-Google environments](https://firebase.google.com/docs/admin/setup#initialize_the_sdk_in_non-google_environments)
+
 ## Setup database
 
 We provide two scripts to fill database, they are initData.js and initdb.js which are located in utils folder.
