@@ -5,6 +5,8 @@ const authController = require('./auth.controller');
 const favouriteController = require('./favourite.controller');
 const searchController = require('./search.controller');
 const itemController = require('./item.controller')
+const moveController = require('./move.controller')
+const natureController = require('./nature.controller')
 
 module.exports = {
     pokemonController,
@@ -12,5 +14,7 @@ module.exports = {
     authController,
     favouriteController,
     searchController,
-    itemController
+    itemController,
+    moveController,
+    natureController
 }
