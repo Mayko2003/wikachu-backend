@@ -1,7 +1,7 @@
-if(process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 }
-const { mongoose } = require('./db');
+const dbConnection = require('./db');
 const express = require('express');
 const cors = require('cors');
 
@@ -14,13 +14,20 @@ app.use(cors());
 app.use(express.json());
 
 //routes
-app.use('/api',require('./routes'));
+app.use('/api', require('./routes'));
 
 //configs
 app.set('port', process.env.PORT || 3000);
 
-//start server
-app.listen(app.get('port'), () => {
-    console.log('Server started on port', app.get('port'));
+dbConnection.then(() => {
+    
+    console.log('Connected to DB')
+    
+    //start server
+    app.listen(app.get('port'), () => {
+        console.log('Server started on port', app.get('port'));
+    });
+}).catch((err) => {
+    console.log(err);
 });
 
