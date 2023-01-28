@@ -38,7 +38,9 @@ userController.createUser = async (req, res) => {
             message: "User created",
         });
     } catch (error) {
-        res.status(500).json(error);
+        res.status(500).json({
+            message: error.message,
+        });
     }
 };
 
