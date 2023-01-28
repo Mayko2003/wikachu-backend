@@ -18,12 +18,24 @@ Then you need to initialize your .env file so you can guide with env.example fil
 
 ## Setup database
 
-We are not provide seeders and migrations so you nedd to execute initData.js script which is in utils folder:
+We provide two scripts to fill database, they are initData.js and initdb.js which are located in utils folder.
+
+First you need to create a data folder in root folder.
+
+```
+mkdir data
+```
+
+Then you need to obtain data from [Pokemon API](https://pokeapi.co/), so you need to run initData.js:
 
 ```
 node ./utils/initData.js
 ```
 
-Then if you want to poblate your database you need to set the IS_INIT_DB environment var to false, this run initDb.js when start the server so you only need to run it the first time.
+Finally you can run initdb.js for fill your database.
 
-In the future we hope that more functionalities will be incorporated so we avoid a lot of configuration
+```
+node ./utils/initdb.js
+```
+
+NOTE: the commands are used if you are in the root folder, otherwise be sure to change the path
